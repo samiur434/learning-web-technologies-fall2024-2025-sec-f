@@ -1,0 +1,42 @@
+<persons>
+
+
+  <person Sl="23">
+   <name>
+    <firstname>  John  </firstname>
+    <lastname> Carter </lastname>
+     </name>
+    <admissiondate>
+    <day>25 </day>
+    <month> 12</month>
+    <year> 2015 </year>
+    </admissiondate>
+  </person>
+
+  <person Sl="29">
+    <name>
+    <firstname>  Bob </firstname>
+    <lastname> Marshal </lastname>
+     </name>
+    <admissiondate>
+    <day>13 </day>
+    <month> 01</month>
+    <year> 1999 </year>
+    </admissiondate>
+  </person>
+
+
+  <person Sl="35">
+     <name>
+    <firstname>  Clark </firstname>
+    <lastname> Kent </lastname>
+     </name>
+    <admissiondate>
+    <day> 17 </day>
+    <month> 06</month>
+    <year> 2005 </year>
+    </admissiondate>
+  </person>
+
+</persons>
+
