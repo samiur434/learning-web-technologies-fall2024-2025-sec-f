@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Question</title>
+    <style>
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="updateForm">
+        <div class="mb-3">
+            <label for="Questionname" class="form-label">Question name</label>
+            <input type="text" id="Questionname" class="form-control" name="Questionname" required>
+            <span id="questionnameError" class="error"></span>
+        </div>
+        <div class="mb-3">
+            <label for="questiontype" class="form-label">Question type</label>
+            <select id="questiontype" name="questiontype" required>
+                <option value="MCQ">MCQ</option>
+                <option value="Short question">Short question</option>
+                <option value="Broad question">Broad question</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="timelimit" class="form-label">Time limit</label>
+            <input type="number" id="timelimit" class="form-control" name="timelimit" required>
+            <span id="timelimitError" class="error"></span>
+        </div>
+        <div class="mb-3">
+            <label for="lastdate" class="form-label">Last date</label>
+            <input type="date" id="lastdate" class="form-control" name="lastdate" required>
+            <span id="lastdateError" class="error"></span>
+        </div>
+        <button type="button" id="submitBtn">Update</button>
+        <div id="responseMessage"></div>
+    </form>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            const Questionname = document.getElementById('Questionname').value.trim();
+            const questiontype = document.getElementById('questiontype').value;
+            const timelimit = document.getElementById('timelimit').value.trim();
+            const lastdate = document.getElementById('lastdate').value.trim();
+            const responseMessage = document.getElementById('responseMessage');
+
+
+            document.querySelectorAll('.error').forEach(e => e.innerText = "");
+            responseMessage.innerText = "";
+
+
+            let valid = true;
+
+            if (!Questionname) {
+                document.getElementById('questionnameError').innerText = "Question name is required.";
+                valid = false;
+            }
+
+            if (!timelimit || isNaN(timelimit) || timelimit <= 0) {
+                document.getElementById('timelimitError').innerText = "Time limit must be a positive number.";
+                valid = false;
+            }
+
+            if (!lastdate) {
+                document.getElementById('lastdateError').innerText = "Last date is required.";
+                valid = false;
+            }
+
+            if (!valid) {
+                return;
+            }
+
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '../Model/update.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        responseMessage.className = 'success';
+                        responseMessage.innerText = xhr.responseText;
+                    } else {
+                        responseMessage.className = 'error';
+                        responseMessage.innerText = "An error occurred. Please try again.";
+                    }
+                }
+            };
+
+            const params = `Questionname=${encodeURIComponent(Questionname)}&questiontype=${encodeURIComponent(questiontype)}&timelimit=${encodeURIComponent(timelimit)}&lastdate=${encodeURIComponent(lastdate)}`;
+            xhr.send(params);
+        });
+    </script>
+</body>
+
+</html>

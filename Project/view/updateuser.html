@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update User</title>
+    <style>
+        .error {
+            color: red;
+        }
+
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Update User</h1>
+    <form id="updateUserForm">
+        <div>
+            <label>Enter Username (to identify the user):</label>
+            <input type="text" id="username" name="username" required>
+            <span id="usernameError" class="error"></span>
+        </div>
+        <div>
+            <label>New Password:</label>
+            <input type="password" id="password" name="password" required>
+            <span id="passwordError" class="error"></span>
+        </div>
+        <div>
+            <label>New Email:</label>
+            <input type="email" id="email" name="email" required>
+            <span id="emailError" class="error"></span>
+        </div>
+        <button type="button" id="submitBtn">Update</button>
+        <div id="responseMessage"></div>
+    </form>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const responseMessage = document.getElementById('responseMessage');
+
+
+            document.querySelectorAll('.error').forEach(e => e.innerText = "");
+            responseMessage.innerText = "";
+
+            let valid = true;
+
+            if (!username) {
+                document.getElementById('usernameError').innerText = "Username is required.";
+                valid = false;
+            }
+
+            if (!password || password.length < 6) {
+                document.getElementById('passwordError').innerText = "Password must be at least 6 characters long.";
+                valid = false;
+            }
+
+            if (!email || !email.includes('@')) {
+                document.getElementById('emailError').innerText = "A valid email address is required.";
+                valid = false;
+            }
+
+            if (!valid) {
+                return;
+            }
+
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '../Model/updateuser.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        responseMessage.className = 'success';
+                        responseMessage.innerText = xhr.responseText;
+                    } else {
+                        responseMessage.className = 'error';
+                        responseMessage.innerText = "An error occurred while updating the user.";
+                    }
+                }
+            };
+
+            const params = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}`;
+            xhr.send(params);
+        });
+    </script>
+</body>
+
+</html>

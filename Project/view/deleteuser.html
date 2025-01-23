@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container div {
+            margin-bottom: 15px;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-container input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        #deleteBtn {
+            background-color: #f44336;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        #deleteBtn:hover {
+            background-color: #e53935;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9rem;
+        }
+
+        .success {
+            color: green;
+            font-size: 1rem;
+        }
+
+        #responseMessage {
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h1>Delete User</h1>
+        <form id="deleteUserForm">
+            <div>
+                <label for="username">Enter Username:</label>
+                <input type="text" id="username" name="username" required>
+                <span id="usernameError" class="error"></span>
+            </div>
+            <button type="button" id="deleteBtn">Delete</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+
+    <script>
+        document.getElementById('deleteBtn').addEventListener('click', function () {
+            const username = document.getElementById('username').value.trim();
+            const responseMessage = document.getElementById('responseMessage');
+
+
+            document.getElementById('usernameError').innerText = "";
+            responseMessage.innerText = "";
+
+
+            if (!username) {
+                document.getElementById('usernameError').innerText = "Username is required.";
+                return;
+            }
+
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '../Model/deleteuser.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        responseMessage.className = 'success';
+                        responseMessage.innerText = xhr.responseText;
+                        document.getElementById('deleteUserForm').reset();
+                    } else {
+                        responseMessage.className = 'error';
+                        responseMessage.innerText = "An error occurred while deleting the user.";
+                    }
+                }
+            };
+
+
+            const params = `username=${encodeURIComponent(username)}`;
+            xhr.send(params);
+        });
+    </script>
+</body>
+
+</html>

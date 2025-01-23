@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+
+
+
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            text-align: center;
+            font-size: 18px;
+            justify-content: center;
+            display: flex;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 20px;
+        }
+
+        header div {
+            margin-bottom: 20px;
+        }
+
+        header a {
+            display: block;
+            text-decoration: none;
+            color: white;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #333;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        header a:hover {
+            background-color: #555;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+        }
+
+        footer .card {
+            background-color: #444;
+            color: white;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+            width: 300px;
+            padding: 15px;
+        }
+
+        footer .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        footer .card-body {
+            font-size: 1rem;
+        }
+
+        footer .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+
+        footer .btn-primary:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div>
+            <header>
+                <h1>Welcome Admin</h1>
+                <div>
+                    <a href="Quiz.html">Add New Question</a>
+                    <a href="Read.php">Check all question</a>
+                    <a href="update.html">Update quiz question</a>
+                    <a href="Delete.html">Delete quiz question</a>
+                </div>
+                <div>
+                    <a href="updateuser.html">Update user</a>
+                    <a href="readuser.php">Check all user</a>
+                    <a href="deleteuser.html">Delete user</a>
+                </div>
+                <a href="leaderboard.php">Check leaderboard</a>
+                <a href="Progresstracker.php">Check progress of students</a>
+            </header>
+        </div>
+
+        <div>
+            <footer>
+                <div class="card">
+                    <div class="card-header">
+                        Featured
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Special title treatment</h5>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AJAX User Progress</title>
+    <style>
+        .progress-bar {
+            background-color: #4caf50;
+            height: 20px;
+            color: white;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>User Progress</h1>
+
+    <table border="1" style="width: 80%; margin: 20px auto;">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Progress</th>
+            </tr>
+        </thead>
+        <tbody id="userProgressTable">
+
+        </tbody>
+    </table>
+
+    <script>
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "./Progresstracker.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+
+                const data = JSON.parse(xhr.responseText);
+
+                let tableContent = "";
+
+                if (data.message) {
+
+                    tableContent = `<tr><td colspan="3">${data.message}</td></tr>`;
+                } else {
+
+                    data.forEach((item, index) => {
+                        tableContent += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.username}</td>
+                            <td><div class="progress-bar" style="width: ${item.progress}%;">${item.progress}%</div></td>
+                        </tr>
+                    `;
+                    });
+                }
+
+
+                document.getElementById("userProgressTable").innerHTML = tableContent;
+            } else {
+                console.error("Failed to load user progress data.");
+            }
+        };
+
+        xhr.send();
+    </script>
+
+</body>
+
+</html>

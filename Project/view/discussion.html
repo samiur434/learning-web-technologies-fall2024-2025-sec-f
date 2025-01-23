@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquiry Forum</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-control:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9rem;
+        }
+
+        .success {
+            color: green;
+            font-size: 1rem;
+        }
+
+        #responseMessage {
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h1>Enquiry Forum</h1>
+        <form id="enquiryForm">
+            <div class="mb-3">
+                <label for="email">Email address</label>
+                <input name="email" type="email" id="email" class="form-control" required>
+                <span id="emailError" class="error"></span>
+            </div>
+            <div class="mb-3">
+                <label for="discussion" class="form-label">Write Here</label>
+                <textarea name="discussion" id="discussion" class="form-control" required></textarea>
+                <span id="discussionError" class="error"></span>
+            </div>
+
+            <button type="button" id="submitBtn" class="btn">Submit</button>
+            <div id="responseMessage"></div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            const email = document.getElementById('email').value.trim();
+            const discussion = document.getElementById('discussion').value.trim();
+            const responseMessage = document.getElementById('responseMessage');
+
+            document.querySelectorAll('.error').forEach(e => e.innerText = "");
+            responseMessage.innerText = "";
+
+            let valid = true;
+
+
+            if (!email || !email.includes('@')) {
+                document.getElementById('emailError').innerText = "A valid email address is required.";
+                valid = false;
+            }
+
+            if (!discussion) {
+                document.getElementById('discussionError').innerText = "Discussion content cannot be empty.";
+                valid = false;
+            }
+
+            if (!valid) {
+                return;
+            }
+
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '../Model/Discussion.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        responseMessage.className = 'success';
+                        responseMessage.innerText = xhr.responseText;
+                        document.getElementById('enquiryForm').reset();
+                    } else {
+                        responseMessage.className = 'error';
+                        responseMessage.innerText = "An error occurred while submitting your enquiry.";
+                    }
+                }
+            };
+
+            const params = `email=${encodeURIComponent(email)}&discussion=${encodeURIComponent(discussion)}`;
+            xhr.send(params);
+        });
+    </script>
+</body>
+
+</html>

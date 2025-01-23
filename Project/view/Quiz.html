@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Section</title>
+    <style type="text/css">
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9rem;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        .message.success {
+            color: green;
+        }
+
+        .message.error {
+            color: red;
+        }
+
+
+        a {
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        a:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        a+a {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="quizForm" onsubmit="submitQuizForm(event)">
+        <div class="mb-3">
+            <label for="Questionname" class="form-label">Question Name</label>
+            <input type="text" id="Questionname" class="form-control" name="Questionname">
+            <span id="questionnameError" class="error"></span>
+        </div>
+        <div class="mb-3">
+            <label for="questiontype" class="form-label">Question Type</label>
+            <select id="questiontype" name="questiontype" class="form-control">
+                <option value="MCQ">MCQ</option>
+                <option value="Short question">Short question</option>
+                <option value="Broad question">Broad question</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="timelimit" class="form-label">Time Limit</label>
+            <input type="number" id="timelimit" class="form-control" name="timelimit">
+            <span id="timelimitError" class="error"></span>
+        </div>
+        <div class="mb-3">
+            <label for="lastdate" class="form-label">Last Date</label>
+            <input type="date" id="lastdate" class="form-control" name="lastdate">
+            <span id="lastdateError" class="error"></span>
+        </div>
+        <input type="submit" class="btn" value="Submit">
+        <div id="formMessage" class="message"></div>
+    </form>
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="./update.html">Update Quiz</a>
+        <a href="./Delete.html">Delete Quiz</a>
+        <a href="./read.php">Check all Quiz</a>
+    </div>
+
+
+    <script>
+
+        function validateField(field, value) {
+            const errorElement = document.getElementById(`${field}Error`);
+            if (field === 'Questionname') {
+                if (!value.trim()) {
+                    errorElement.innerText = "Question name cannot be empty.";
+                    return false;
+                }
+            } else if (field === 'timelimit') {
+                if (!value || isNaN(value) || value <= 0) {
+                    errorElement.innerText = "Time limit must be a positive number.";
+                    return false;
+                }
+            } else if (field === 'lastdate') {
+                if (!value) {
+                    errorElement.innerText = "Last date is required.";
+                    return false;
+                }
+            }
+            errorElement.innerText = "";
+            return true;
+        }
+
+
+        function submitQuizForm(event) {
+            event.preventDefault();
+
+            const Questionname = document.getElementById('Questionname').value.trim();
+            const questiontype = document.getElementById('questiontype').value;
+            const timelimit = document.getElementById('timelimit').value.trim();
+            const lastdate = document.getElementById('lastdate').value.trim();
+            const formMessage = document.getElementById('formMessage');
+
+
+            const isQuestionNameValid = validateField('Questionname', Questionname);
+            const isTimeLimitValid = validateField('timelimit', timelimit);
+            const isLastDateValid = validateField('lastdate', lastdate);
+
+            if (!isQuestionNameValid || !isTimeLimitValid || !isLastDateValid) {
+                formMessage.style.color = "red";
+                formMessage.innerText = "Please correct the errors above.";
+                return;
+            }
+
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '../Model/Quizhandle.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        formMessage.style.color = "green";
+                        formMessage.innerText = xhr.responseText;
+                        document.getElementById('quizForm').reset();
+                    } else {
+                        formMessage.style.color = "red";
+                        formMessage.innerText = "An error occurred while submitting the form.";
+                    }
+                }
+            };
+
+            // Send data to server
+            xhr.send(
+                `Questionname=${encodeURIComponent(Questionname)}&questiontype=${encodeURIComponent(questiontype)}&timelimit=${encodeURIComponent(timelimit)}&lastdate=${encodeURIComponent(lastdate)}`
+            );
+        }
+    </script>
+</body>
+
+</html>
